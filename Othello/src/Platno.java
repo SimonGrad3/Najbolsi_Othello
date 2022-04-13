@@ -1,7 +1,7 @@
 
 public class Platno {
 
-	//Samo preverjam èe to dela
+	//Samo preverjam èe to dela. dela upam.
 	
 	
 }
