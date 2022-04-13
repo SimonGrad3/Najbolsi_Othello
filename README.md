@@ -1,1 +1,1 @@
-# Najbol-i-Othello
+# Najbolši-Othello
