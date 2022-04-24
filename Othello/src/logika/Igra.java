@@ -5,6 +5,7 @@ import splosno.Poteza;
 public class Igra {
 
 	public static void main(String[] args) {
+	
 		String[][] primerStevilke = {
 				{"00", "01", "02", "03", "04", "05", "06", "07"},
 				{"10", "11", "12", "13", "14", "15", "16", "17"},
@@ -177,7 +178,31 @@ public class Igra {
 	
 	
 	
-	//spremeni je funkcija, ki vrne stolpec spremeni(stolpec)
+	//spremeni je funkcija, ki vrne stolpec spremeni(stolpec) in mesto jajèka i
+	
+	public String[] spremeni(String[] seznam, int i) { 
+		// i - oznaèuje mesto poteze. 
+		// Preverimo, da je vsaj en element enak nasprotnemu znakcu.
+		if ((seznam[i + 1] != this.nasprotnik) && (seznam[i-1] != this.nasprotnik)) return seznam;
+		else if (seznam[i + 1] == this.nasprotnik) {  //Èe je i+1 element ustrezen 
+			for (int j = i + 1; j < seznam.length; j++) { 
+				if (seznam[j] == this.nasprotnik) seznam[j] = this.igralec; 
+				else return seznam;
+				}
+			return seznam;
+		}
+		
+		else if (seznam[i - 1] == this.nasprotnik) { 
+			for (int j = i-1; j >= 0; j--) { 
+				if (seznam[j] == this.nasprotnik) seznam[j] = this.igralec;
+				else return seznam;
+				} 
+			return seznam;
+			} 
+		else return seznam;
+		}
+	
+	
 	
 	//vlozi------------------------------------------------------------------------------------------------
 	
