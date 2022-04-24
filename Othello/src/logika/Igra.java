@@ -15,22 +15,25 @@ public class Igra {
 				{"60", "61", "62", "63", "64", "65", "66", "67"},
 				{"70", "71", "72", "73", "74", "75", "76", "77"},
 				};
-		String[][] tr = transponiraj(primerStevilke);
+		String[][] mat = zarotiraj((primerStevilke));
 		
 		//for (int i = 0; i < 8; ++i) {
 		//	for (int j = 0; j < 8; ++j) {
-		//		System.out.println(tr[i][j]);;
+		//		System.out.println(mat[i][j]);;
 		//	}
 		//}
 		
-		
-		String[] z = getDiagonalaL(1, 1, primerStevilke);
-		for(int k = 0; k < 8; ++k) {
-			System.out.print(z[k]);
+		String[] z = getDiagonalaS(1, 5, primerStevilke);
+		for(int k = 0; k < z.length; ++k) {
+			System.out.println(z[k]);
 		}
-			
 		
+		System.out.println("---");
 		
+		int m = mestoDiagonalaL(4,3,primerStevilke);
+		
+		System.out.print(m);
+	
 	}
 	protected String crn = "C";
 	protected String bel = "B";
@@ -52,19 +55,27 @@ public class Igra {
 		this.nasprotnik = nasprotnik();
 	}
 	
-	public String[] getVrstica(int x, int y) {
-			return igra[x];
+	public String nasprotnik() {
+		if (this.igralec == bel) return crn;
+		return bel;
 	}
 	
-	public String[] getStolpec(int x, int y) {
+	//funkcije get ----------------------------------------------------------------------------------
+	
+	public static String[] getVrstica(int x, int y, String[][] plosca) {
+			return plosca[x];
+	}
+	
+	public static String[] getStolpec(int x, int y, String[][] plosca) {
 		String[] stolpec = new String[8];
 		for (int i = 0; i < 8; ++i) {
-			stolpec[i] = igra[i][y];
+			stolpec[i] = plosca[i][y];
 		}
 		return stolpec;
 	}
 	
-	public static String[] getDiagonalaS(int x, int y, String[][] plosca) { //soda diagonala
+	//liha diagonala
+	public static String[] getDiagonalaL(int x, int y, String[][] plosca) { 
 		int st = x + y; //stevilka diagonale - imamo 15 razlicnih sodih diagonal
 		int zacetekX = Math.max(0, st - 7); //prva (najmanjsa) vrstica ki se jo dotakne
 		int zacetekY= Math.min(7, st); // zadnji (najvecji) stolpec ki je ga diagonala dotakne
@@ -76,37 +87,52 @@ public class Igra {
 		return diagonala;
 	}
 	
-	public static String[][] transponiraj(String[][] a) {
-			String[][] b = new String[8][8];
-			for (int i = 0; i < 8; ++i) {
-				for (int j = 0; j < 8; ++j) {
-					b[j][i] = a[i][j];
+	public static String[][] zarotiraj(String[][] star) { //zarotira matriko za 90 stopinj v levo
+		String[][] nov = new String[8][8];
+		for (int x = 0; x < 8; ++x) {
+			for (int y = 0; y < 8; ++y) {
+				nov[x][y] = star[7 - y][x];			
 				}
+		}
+		return nov;
+	}
+	
+	//soda diagonala
+	public static String[] getDiagonalaS(int x0, int y0, String[][] plosca) { 
+		int x = 7 - x0;
+		int y = y0;
+		String[][] nova = zarotiraj(plosca);
+		return getDiagonalaL(x, y, nova);
+	}
+	
+	//mesto jajcka -----------------------------------------------------------------------------------------
+	
+	public static int mestoDiagonalaL(int x, int y, String[][] plosca) {
+		String elt = plosca[x][y];
+		String[] d = getDiagonalaL(x, y, plosca);
+		for (int i = 0; i < d.length; ++i) {
+			if (d[i] == elt) {
+				return i;
 			}
-			return b;
+		}
+		return -1;
 	}
 	
 	
-	//popravi!
-	public static String[] getDiagonalaL(int x0, int y0, String[][] plosca ) { //liha diagonala
-		int x = y0;
-		int y = 7 - x0;
-		String[][] tr = transponiraj(plosca);
-		return getDiagonalaS(x, y, tr);
+	public static int mestoDiagonalaS(int x, int y, String[][] plosca) {
+		String elt = plosca[x][y];
+		String[] d = getDiagonalaS(x, y, plosca);
+		for (int i = 0; i < d.length; ++i) {
+			if (d[i] == elt) {
+				return i;
+			}
+		}
+		return -1;
 	}
 	
 	
 	
-	//mesto jajcka:
-	//vrstica
-	//stolpec
-	//liha
-	//soda 
-	
-	public String nasprotnik() {
-		if (this.igralec == bel) return crn;
-		return bel;
-	}
+	//------------------------------------------------------------------------------------------------------
 	
 	//preveri vzame seznam in lokacijo jajcka, barva igralca; preveri bele crne sosede
 	
@@ -127,13 +153,12 @@ public class Igra {
 		int mestoStolpec = x;
 		int mestoVrstica = y;
 		int mestoDiagonalaL = mestoDiagonalaL(x, y);
-		int mestoDiagonalaD = mestoDiagonalaS(x, y);
-		
+		int mestoDiagonalaS = mestoDiagonalaS(x, y);
 		
 		boolean s = preveri(stolpec, mestoStolpec);
-		boolean v = preveri(stolpec, mestoStolpec);
-		boolean liha = preveri(stolpec, mestoStolpec);
-		boolean soda = preveri(stolpec, mestoStolpec);
+		boolean v = preveri(vrstica, mestoVrstica);
+		boolean liha = preveri(diagonalaL, mestoDiagonalaL);
+		boolean soda = preveri(diagonalaS, mestoDiagonalaS);
 		
 		if (!s && !v && !liha && !soda ) return false;
 		
