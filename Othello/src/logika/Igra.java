@@ -151,6 +151,32 @@ public class Igra {
 	
 	//preveri vzame seznam in lokacijo jajcka, barva igralca; preveri bele crne sosede
 	
+	public boolean preveri(String[] seznam, int i) { 
+		// i - oznaèuje mesto poteze. 
+		// Preverimo, da je vsaj en element enak nasprotnemu znakcu.
+		if ((seznam[i + 1] != this.nasprotnik) && (seznam[i-1] != this.nasprotnik)) return false;
+		else if (seznam[i + 1] == this.nasprotnik) {  //Èe je i+1 element ustrezen 
+			for (int j = i + 1; j < seznam.length; j++) { 
+				if (seznam[j] == this.nasprotnik) continue; 
+				else if (seznam[j] == null) return false; 
+				else return true; 
+				} 
+			return false;
+			} 
+		
+		else if (seznam[i - 1] == this.nasprotnik) { 
+			for (int j = i-1; j >= 0; j--) { 
+				if (seznam[j] == this.nasprotnik) continue; 
+				else if (seznam[j] == null) return false; 
+				else return true; 
+				} 
+			return false;
+			} 
+		else return false;
+		}
+	
+	
+	
 	//spremeni je funkcija, ki vrne stolpec spremeni(stolpec)
 	
 	//vlozi------------------------------------------------------------------------------------------------
