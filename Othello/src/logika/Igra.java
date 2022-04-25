@@ -16,14 +16,9 @@ public class Igra {
 				{"70", "71", "72", "73", "74", "75", "76", "77"},
 				};
 		
-		String[][] mat = zarotirajLevo(zarotirajDesno(primerStevilke));
-		
-		String[] d = {"e", "e", "e", "e", "e", "e", "e", "e"};
-		String[][] pl = vloziDiagonaloS(0, 6, d, primerStevilke);
-		
 		for (int i = 0; i < 8; ++i) {
 			for (int j = 0; j < 8; ++j) {
-				System.out.println(pl[i][j]);;
+				System.out.println(primerStevilke[i][j]);;
 			}
 		}
 		
@@ -46,8 +41,9 @@ public class Igra {
 	protected String bel = "B";
 	protected String igralec;
 	protected String[][] igra;
-	protected String nasprotnik;		
-	
+	protected String nasprotnik;
+	protected String[][] zadnjaPlosca;
+			
 	// x je vrstica 
 	// y je stolpec 
 	//najprej dol potem desno
@@ -60,6 +56,7 @@ public class Igra {
 		igra[4][3] = crn;
 		this.igralec = crn;
 		this.nasprotnik = nasprotnik();
+		this.zadnjaPlosca = null;
 	}
 	
 	public String nasprotnik() {
@@ -253,20 +250,71 @@ public class Igra {
 		int mestoDiagonalaL = mestoDiagonalaL(x, y, igra);
 		int mestoDiagonalaS = mestoDiagonalaS(x, y, igra);
 		
-		boolean s = preveri(stolpec, mestoStolpec, igra);
+		boolean s = preveri(stolpec, mestoStolpec);
 		boolean v = preveri(vrstica, mestoVrstica);
 		boolean liha = preveri(diagonalaL, mestoDiagonalaL);
 		boolean soda = preveri(diagonalaS, mestoDiagonalaS);
 		
 		if (!s && !v && !liha && !soda ) return false;
 		
-		if (s) vloziStolpec(spremeni(stolpec, mestoStolpec));
-		if (v) vloziVrstico(spremeni(vrstica, mestoVrstica));
-		if (liha) spremeni(vrstica);
-		if (soda) spremeni(vrstica);
+		this.zadnjaPlosca = igra;
+		
+		if (s) vloziStolpec(x, y, spremeni(stolpec, mestoStolpec), igra);
+		if (v) vloziVrstico(x, y, spremeni(vrstica, mestoVrstica), igra);
+		if (liha) vloziDiagonaloL(x, y, spremeni(vrstica, mestoDiagonalaL), igra);
+		if (soda) vloziDiagonaloS(x, y, spremeni(vrstica, mestoDiagonalaS), igra);
 		
 		igralec = nasprotnik();
 		return true;
 	}
 
+
+//-----------------------------------------------------------------------------------
+	
+//vsa mozna mesta za potezo 
+	
+
+	
+//preverjanje stanja : ali je konec igre, kdo je zmagal, stetje zetonov
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
