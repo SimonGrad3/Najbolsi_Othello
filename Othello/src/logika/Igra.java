@@ -19,7 +19,6 @@ public class Igra {
 		String[][] mat = zarotirajLevo(zarotirajDesno(primerStevilke));
 		
 		String[] d = {"e", "e", "e", "e", "e", "e", "e", "e"};
-		
 		String[][] pl = vloziDiagonaloS(0, 6, d, primerStevilke);
 		
 		for (int i = 0; i < 8; ++i) {
@@ -42,6 +41,7 @@ public class Igra {
 		//System.out.print(m);
 	
 	}
+	
 	protected String crn = "C";
 	protected String bel = "B";
 	protected String igralec;
@@ -151,7 +151,55 @@ public class Igra {
 	
 	//preveri vzame seznam in lokacijo jajcka, barva igralca; preveri bele crne sosede
 	
-	//spremeni je funkcija, ki vrne stolpec spremeni(stolpec)
+	public boolean preveri(String[] seznam, int i) { 
+		// i - oznaèuje mesto poteze. 
+		// Preverimo, da je vsaj en element enak nasprotnemu znakcu.
+		if ((seznam[i + 1] != this.nasprotnik) && (seznam[i-1] != this.nasprotnik)) return false;
+		else if (seznam[i + 1] == this.nasprotnik) {  //Èe je i+1 element ustrezen 
+			for (int j = i + 1; j < seznam.length; j++) { 
+				if (seznam[j] == this.nasprotnik) continue; 
+				else if (seznam[j] == null) return false; 
+				else return true; 
+				} 
+			return false;
+			} 
+		
+		else if (seznam[i - 1] == this.nasprotnik) { 
+			for (int j = i-1; j >= 0; j--) { 
+				if (seznam[j] == this.nasprotnik) continue; 
+				else if (seznam[j] == null) return false; 
+				else return true; 
+				} 
+			return false;
+			} 
+		else return false;
+		}
+	
+	
+	
+	//spremeni je funkcija, ki vrne stolpec spremeni(stolpec) in mesto jajèka i
+	
+	public String[] spremeni(String[] seznam, int i) { 
+		// i - oznaèuje mesto poteze. 
+		// Preverimo, da je vsaj en element enak nasprotnemu znakcu.
+		if ((seznam[i + 1] != this.nasprotnik) && (seznam[i-1] != this.nasprotnik)) return seznam;
+		else if (seznam[i + 1] == this.nasprotnik) {  //Èe je i+1 element ustrezen 
+			for (int j = i + 1; j < seznam.length; j++) { 
+				if (seznam[j] == this.nasprotnik) seznam[j] = this.igralec; 
+				else return seznam;
+				}
+			return seznam;
+		}
+		
+		else if (seznam[i - 1] == this.nasprotnik) { 
+			for (int j = i-1; j >= 0; j--) { 
+				if (seznam[j] == this.nasprotnik) seznam[j] = this.igralec;
+				else return seznam;
+				} 
+			return seznam;
+			} 
+		else return seznam;
+		}
 	
 	//vlozi------------------------------------------------------------------------------------------------
 	
@@ -192,6 +240,7 @@ public class Igra {
 	public boolean odigraj(Poteza poteza) {
 		int x = poteza.getX(); //vrstica
 		int y = poteza.getY(); //stolpec
+		
 		//ce je prazno mesto 
 		if (igra[x][y] != null) return false;
 		String[] stolpec = getStolpec(x, y, igra);
