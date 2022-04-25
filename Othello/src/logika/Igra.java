@@ -5,6 +5,7 @@ import splosno.Poteza;
 public class Igra {
 
 	public static void main(String[] args) {
+	
 		String[][] primerStevilke = {
 				{"00", "01", "02", "03", "04", "05", "06", "07"},
 				{"10", "11", "12", "13", "14", "15", "16", "17"},
@@ -198,6 +199,9 @@ public class Igra {
 		else return seznam;
 		}
 	
+	
+	
+	
 	//vlozi------------------------------------------------------------------------------------------------
 	
 	
@@ -268,6 +272,7 @@ public class Igra {
 		return true;
 	}
 
+<<<<<<< HEAD
 
 //-----------------------------------------------------------------------------------
 	
@@ -319,3 +324,6 @@ public class Igra {
 
 
 
+=======
+}
+>>>>>>> branch 'main' of git@github.com:SimonGrad3/Najbolsi_Othello.git
