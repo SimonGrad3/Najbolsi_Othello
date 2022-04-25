@@ -273,6 +273,7 @@ public class Igra {
 	
 //vsa mozna mesta za potezo 
 	
+//razveljavi zadnjo potezo
 
 	
 //preverjanje stanja : ali je konec igre, kdo je zmagal, stetje zetonov
