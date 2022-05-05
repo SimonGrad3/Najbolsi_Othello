@@ -1,47 +1,18 @@
 package logika;
 
-import java.util.Scanner;
-
 import splosno.Poteza;
 
 public class Igra {
-
-	public static void main(String[] args) {
-		
-		Scanner myObj = new Scanner(System.in);  
-	    System.out.println("Enter username");
-
-	    String userName = myObj.nextLine(); 
-	    System.out.println("Username is: " + userName);
-		
-		izpisiPlosco(p, Igralec.BEL);
-
-//		p = akcija(3, 2, Igralec.CRN, p);
-//		p = akcija(2, 4, Igralec.BEL, p);		
-//		p = akcija(2, 5, Igralec.CRN, p);
-		
-	}
 	
 	protected Igralec naPotezi;
 	protected Polje[][] plosca;
-	protected Igralec nasprotnik;
-	protected Stanje stanje;
 	protected Polje[][] zadnjaPlosca;
-	
-	protected static Polje[][] p = {
-			{Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO},
-			{Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO},
-			{Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO},
-			{Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.BEL, Polje.CRN, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO},
-			{Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.CRN, Polje.BEL, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO},
-			{Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO},
-			{Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO},
-			{Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO},
-			};
+	protected Stanje stanje;
 			
 	// x je vrstica 
 	// y je stolpec 
 	
+	//konstrunktor:
 	public Igra() {
 		plosca = new Polje[8][8];
 		for (int i = 0; i < 8; i++) {
@@ -57,97 +28,7 @@ public class Igra {
 		plosca[3][4] = Polje.CRN;
 		plosca[4][3] = Polje.CRN;
 		zadnjaPlosca = plosca;
-	}
-	
-
-	//-----------------------------------------------------------------------------------------------------
-	//funkcije za izpis ----------------------------------------------------------------------------------
-	
-
-	
-	public static String nasprotnik(String igralec) {
-		if (igralec == "B") return "C";
-		return "B";
-	}
-	
-	public static void izpisiPlosco(Polje[][] plosca, Igralec igralec) {
-		Igralec nasprotnik = igralec.nasprotnik();
-		
-		System.out.println();
-		izpisiStanjeIgre(plosca, igralec);
-		System.out.println();
-		System.out.print("   | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |");
-		for (int i = 0; i < 8; ++i) {
-			System.out.println();
-			System.out.print("------------------------------------");
-			System.out.println();
-			System.out.print(" " + i + " | ");
-			for (int j = 0; j < 8; ++j) {
-				if (plosca[i][j] == Polje.PRAZNO) {
-					System.out.print(" "+ " | ");;
-				}
-				else {
-					System.out.print(plosca[i][j]+ " | ");;
-				}
-			}
-		}
-		System.out.println();
-		
-		izpisiStanjeZetonov(plosca);
-		izpisiMoznePoteze(plosca, nasprotnik);
-		System.out.println();
-		System.out.println("#########################################");
-	}
-	
-	public static void izpisiSeznam(String[] t) {
-		System.out.println();
-		for (int i = 0; i < t.length; ++i) {
-			System.out.print(t[i]);
-		}
-		System.out.println();
-	}
-	
-	public static void izpisiStanjeIgre(Polje[][] plosca, Igralec igralec) {
-		Igralec nasprotnik = igralec.nasprotnik();
-		Stanje stanje = stanjeIgre(plosca, igralec);
-		System.out.println();
-		System.out.println("Odigral je " + igralec.toString() +  ". ");
-		
-		if (stanje == null) System.out.println("Na vrsti je " + nasprotnik + ". ");
-		else if (stanje == Stanje.NEODLOCENO) System.out.println("Igra je koncana. Igralca sta izenačena.");
-		else if (stanje == Stanje.ZMAGA_CRN) System.out.println("Igra je koncana. Zmagal je črni.");
-		else if (stanje == Stanje.ZMAGA_BEL) System.out.println("Igra je koncana. Zmagal je beli.");
-	}
-	
-	
-	public static void izpisiStanjeZetonov(Polje[][] plosca) {
-		int[] t = stanjeZetonov(plosca);
-		System.out.println();
-		System.out.println("Crni: " + t[0]);
-		System.out.println("Beli: " + t[1]);
-	}
-	
-	public static void izpisiMoznePoteze(Polje[][] plosca, Igralec igralec) {
-		Poteza[] p = moznePoteze(plosca, igralec);
-		int d = steviloMoznihPotez(plosca, igralec);
-		System.out.println();
-		System.out.println("Mozne poteze za " + igralec.toString() + ": ");
-		if (d == 0) System.out.println("Ni možnih potez. Igre je konec.");
-		else {
-			for (int i = 0; i < d; ++i) {
-				System.out.println("- (" + p[i].getX() + ", " + p[i].getY() + ")");
-			}
-		}
-	}
-
-	//odigra potezo v main
-	public static Polje[][] akcija(int x, int y, Igralec igralec, Polje[][] plosca) {
-		Poteza p = new Poteza(x, y);
-		Polje[][] plosca1 = odigraj(p, plosca, igralec);
-		izpisiPlosco(plosca1, igralec);
-		return plosca1;
-	}
-	
+	}	
 	
 	//-----------------------------------------------------------------------------------------------------
 	//funkcije get ----------------------------------------------------------------------------------------
@@ -333,6 +214,7 @@ public class Igra {
 		else  return -1;
 	}
 	
+	
 	//------------------------------------------------------------------------------------------------------
 	//preveri in spremeni--------------------------------------------------------------------------------------------
 	
@@ -443,12 +325,14 @@ public class Igra {
 	
 	//-------------------------------------------------------------------------------------------------------
 	//-------------------------------------------------------------------------------------------------------
-	public static Polje[][] odigraj(Poteza poteza, Polje[][] plosca, Igralec igralec) {
+	public boolean odigraj(Poteza poteza) {
 		int x = poteza.getX(); //vrstica
 		int y = poteza.getY(); //stolpec
 		
-		//ce je prazno mesto 
-		if (plosca[x][y] != Polje.PRAZNO) return plosca; //return false
+		//ce je polje ze zasedeno
+		if (plosca[x][y] != Polje.PRAZNO) return false;
+		
+		//ce je polje prosto 
 		Polje[] stolpec = getStolpec(x, y, plosca);
 		Polje[] vrstica = getVrstica(x, y, plosca);
 		Polje[] diagonalaL = getDiagonalaL(x, y, plosca);
@@ -459,22 +343,25 @@ public class Igra {
 		int mestoDiagonalaL = mestoDiagonalaL(x, y, plosca);
 		int mestoDiagonalaS = mestoDiagonalaS(x, y, plosca);
 		
-		boolean s = preveri(stolpec, mestoStolpec, igralec);
-		boolean v = preveri(vrstica, mestoVrstica, igralec);
-		boolean liha = preveri(diagonalaL, mestoDiagonalaL, igralec);
-		boolean soda = preveri(diagonalaS, mestoDiagonalaS, igralec);
+		boolean s = preveri(stolpec, mestoStolpec, naPotezi);
+		boolean v = preveri(vrstica, mestoVrstica, naPotezi);
+		boolean liha = preveri(diagonalaL, mestoDiagonalaL, naPotezi);
+		boolean soda = preveri(diagonalaS, mestoDiagonalaS, naPotezi);
 		
-		if (!s && !v && !liha && !soda ) return plosca; // return false
+		if (!s && !v && !liha && !soda) return false;
 		
-		//this.zadnjaPlosca = plosca;
+		zadnjaPlosca = plosca;
 		
-		if (s) plosca = vloziStolpec(x, y, spremeni(stolpec, mestoStolpec, igralec), plosca);
-		if (v) plosca =  vloziVrstico(x, y, spremeni(vrstica, mestoVrstica, igralec), plosca);
-		if (liha) plosca =  vloziDiagonaloL(x, y, spremeni(diagonalaL, mestoDiagonalaL, igralec), plosca);
-		if (soda) plosca =  vloziDiagonaloS(x, y, spremeni(diagonalaS, mestoDiagonalaS, igralec), plosca);
-		//return true;
+		if (s) plosca = vloziStolpec(x, y, spremeni(stolpec, mestoStolpec, naPotezi), plosca);
+		if (v) plosca =  vloziVrstico(x, y, spremeni(vrstica, mestoVrstica, naPotezi), plosca);
+		if (liha) plosca =  vloziDiagonaloL(x, y, spremeni(diagonalaL, mestoDiagonalaL, naPotezi), plosca);
+		if (soda) plosca =  vloziDiagonaloS(x, y, spremeni(diagonalaS, mestoDiagonalaS, naPotezi), plosca);
 		
-		return plosca;
+		naPotezi = naPotezi.nasprotnik();
+		
+		return true; //true pomeni, da je odrigral potezo
+		
+		
 	}
 
 
@@ -482,8 +369,8 @@ public class Igra {
 //MOZNE POTEZE----------------------------------------------------------------------------------------------
 	
 	//vsa mozna mesta za potezo 
-	public static Poteza[] moznePoteze(Polje[][] plosca, Igralec igralec) {
-		Poteza[] poteze = new Poteza[steviloPraznihMest(plosca)];
+	public Poteza[] moznePoteze() {
+		Poteza[] poteze = new Poteza[steviloPraznihMest()];
 		int stevec = 0;
 		for (int y = 0; y < 8; ++y) {
 			for (int x = 0; x < 8; ++x) {
@@ -498,10 +385,10 @@ public class Igra {
 					int mestoDiagonalaL = mestoDiagonalaL(x, y, plosca);
 					int mestoDiagonalaS = mestoDiagonalaS(x, y, plosca);
 					
-					boolean s = preveri(stolpec, mestoStolpec, igralec);
-					boolean v = preveri(vrstica, mestoVrstica, igralec);
-					boolean liha = preveri(diagonalaL, mestoDiagonalaL, igralec);
-					boolean soda = preveri(diagonalaS, mestoDiagonalaS, igralec);
+					boolean s = preveri(stolpec, mestoStolpec, naPotezi);
+					boolean v = preveri(vrstica, mestoVrstica, naPotezi);
+					boolean liha = preveri(diagonalaL, mestoDiagonalaL, naPotezi);
+					boolean soda = preveri(diagonalaS, mestoDiagonalaS, naPotezi);
 					
 					if (s || v || soda || liha) {
 						poteze[stevec] = new Poteza(x, y);
@@ -513,8 +400,8 @@ public class Igra {
 		return poteze;
 	}
 	
-	public static int steviloMoznihPotez(Polje[][] plosca, Igralec igralec) {
-		Poteza[] moznePoteze = moznePoteze(plosca, igralec);
+	public int steviloMoznihPotez() {
+		Poteza[] moznePoteze = moznePoteze();
 		for (int i = 0; i < moznePoteze.length; ++i) {
 			if (moznePoteze[i] == null) return i;
 		}
@@ -524,7 +411,6 @@ public class Igra {
 	
 //-----------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------
-	
 //razveljavi zadnjo potezo
 
 	
@@ -533,7 +419,7 @@ public class Igra {
 //STANJE-----------------------------------------------------------------------------------------------
 //preverjanje stanja : ali je konec igre, kdo je zmagal, stetje zetonov
 	
-	public static int[] stanjeZetonov(Polje[][] plosca){
+	public int[] stanjeZetonov(){
 		int crni = 0;
 		int beli = 0;
 		int[] stanje = new int[2];
@@ -550,15 +436,15 @@ public class Igra {
 		return stanje;
 	}
 	
-	public static int steviloPraznihMest (Polje[][] plosca) {
-		int[] zetoni = stanjeZetonov(plosca);
+	public int steviloPraznihMest () {
+		int[] zetoni = stanjeZetonov();
 		int beli = zetoni[1];
 		int crni = zetoni[0];
 		return (64 - beli - crni);
 	}
 	
-	public static Igralec vodilniIgralec(Polje[][] plosca) {
-		int[] zetoni = stanjeZetonov(plosca);
+	public Igralec vodilniIgralec() {
+		int[] zetoni = stanjeZetonov();
 		int beli = zetoni[1];
 		int crni = zetoni[0];
 		if (beli > crni) return Igralec.BEL;
@@ -567,13 +453,12 @@ public class Igra {
 	}
 	
 	
-	public static Stanje stanjeIgre(Polje[][] plosca, Igralec igralec) {
+	public Stanje stanjeIgre() {
 		//pogledamo ce ima igralec ki je na vrsti kaksno mozno potezo
-		Igralec nasprotnik = igralec.nasprotnik();
-		int i = steviloMoznihPotez(plosca, igralec);
-		int n = steviloMoznihPotez(plosca, nasprotnik);
-		Igralec vodilni = vodilniIgralec(plosca);
-		if ((n == 0 && i == 0) || steviloPraznihMest(plosca) == 0){ // ce noben igralec nima vec moznih potez ALI ni vec praznih mest je konec
+		int i = steviloMoznihPotez();
+		int n = steviloMoznihPotez();
+		Igralec vodilni = vodilniIgralec();
+		if ((n == 0 && i == 0) || steviloPraznihMest() == 0){ // ce noben igralec nima vec moznih potez ALI ni vec praznih mest je konec
 				if (vodilni == Igralec.BEL) return Stanje.ZMAGA_BEL;
 				else if (vodilni == Igralec.CRN) return Stanje.ZMAGA_CRN;
 				else if (vodilni == null) return Stanje.NEODLOCENO;
