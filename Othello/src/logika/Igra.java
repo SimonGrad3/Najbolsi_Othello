@@ -7,6 +7,7 @@ public class Igra {
 	protected Igralec naPotezi;
 	protected Polje[][] plosca;
 	protected Polje[][] zadnjaPlosca;
+	protected boolean nazaj;
 	protected Stanje stanje;
 			
 	// x je vrstica 
@@ -27,8 +28,23 @@ public class Igra {
 		plosca[4][4] = Polje.BEL;
 		plosca[3][4] = Polje.CRN;
 		plosca[4][3] = Polje.CRN;
-		zadnjaPlosca = plosca;
+		zadnjaPlosca = praznaPlosca;
+		nazaj = false;
 	}	
+	
+	//--------------------------------------------------------------------------------
+	
+	Polje[][] praznaPlosca = {
+			{Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO},
+			{Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO},
+			{Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO},
+			{Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO},
+			{Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO},
+			{Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO},
+			{Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO},
+			{Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO, Polje.PRAZNO},
+			
+			};
 	
 	//-----------------------------------------------------------------------------------------------------
 	//funkcije get ----------------------------------------------------------------------------------------
@@ -325,6 +341,16 @@ public class Igra {
 	
 	//-------------------------------------------------------------------------------------------------------
 	//-------------------------------------------------------------------------------------------------------
+	public Polje[][] kopijaPlosce(Polje[][] plosca) {
+		Polje[][] kopija = new Polje[8][8];
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				kopija[i][j] = plosca[i][j];
+			}
+		}
+		return kopija;
+	}
+	
 	public boolean odigraj(Poteza poteza) {
 		int x = poteza.getX(); //vrstica
 		int y = poteza.getY(); //stolpec
@@ -350,7 +376,8 @@ public class Igra {
 		
 		if (!s && !v && !liha && !soda) return false;
 		
-		zadnjaPlosca = plosca;
+		zadnjaPlosca = kopijaPlosce(plosca);
+		nazaj = true;
 		
 		if (s) plosca = vloziStolpec(x, y, spremeni(stolpec, mestoStolpec, naPotezi), plosca);
 		if (v) plosca =  vloziVrstico(x, y, spremeni(vrstica, mestoVrstica, naPotezi), plosca);
@@ -363,8 +390,7 @@ public class Igra {
 		
 		
 	}
-
-
+	
 //-----------------------------------------------------------------------------------------------------
 //MOZNE POTEZE----------------------------------------------------------------------------------------------
 	
@@ -413,7 +439,16 @@ public class Igra {
 //----------------------------------------------------------------------------------------------------
 //razveljavi zadnjo potezo
 
-	
+	public boolean razveljaviPotezo() {
+		if (nazaj) {
+			plosca = kopijaPlosce(zadnjaPlosca);
+			zadnjaPlosca = praznaPlosca;
+			naPotezi = naPotezi.nasprotnik();
+			nazaj = false;
+			return true;
+		}
+		return false;
+	}
 	
 //-----------------------------------------------------------------------------------------------------
 //STANJE-----------------------------------------------------------------------------------------------

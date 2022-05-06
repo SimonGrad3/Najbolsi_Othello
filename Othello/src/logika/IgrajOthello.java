@@ -15,7 +15,6 @@ public class IgrajOthello {
 	//-----------------------------------------------------------------------------------------------------
 	//funkcije za izpis ----------------------------------------------------------------------------------
 	
-	
 	public static void izpisiPlosco() {
 		Polje[][] plosca = igra.plosca;
 		
@@ -52,18 +51,31 @@ public class IgrajOthello {
 	}
 	
 	public static void odigraj() {
-		Scanner myObj = new Scanner(System.in);  
-	    System.out.println("Vnesi vrstico: ");
-	    int x  = myObj.nextInt(); 
-	    System.out.println("Vnesi stolpec: ");
-	    int y  = myObj.nextInt(); 
-	    System.out.println("Tvoja poteza: (" + x + ", " + y + ")");
+		Scanner myObj = new Scanner(System.in); 
+		
+		System.out.println("Razveljavi zadnjo potezo? Vpisi 'da' ali pusti prazno: ");
+	    String r  = myObj.nextLine();
 	    
-	    Poteza p = new Poteza(x, y);
-	    boolean i = igra.odigraj(p);
-	    
-	    if (!i) System.out.println("Odigrana poteza ni veljavna! Poskusi ponovno.");
-		izpisiPlosco();
+	    if (r.equals("da")) {
+	    	if (!igra.razveljaviPotezo()) {
+	    		System.out.println("Poteze ni mogoče razveljaviti!");
+	    		System.out.println();
+	    	}
+	    	igra.razveljaviPotezo();
+	    }
+	    else {
+		    System.out.println("Vnesi vrstico: ");
+		    int x  = myObj.nextInt(); 
+		    System.out.println("Vnesi stolpec: ");
+		    int y  = myObj.nextInt(); 
+		    System.out.println("Tvoja poteza: (" + x + ", " + y + ")");
+		    
+		    Poteza p = new Poteza(x, y);
+		    boolean i = igra.odigraj(p);
+		    
+		    if (!i) System.out.println("Odigrana poteza ni veljavna! Poskusi ponovno.");
+	    }
+	    izpisiPlosco();
 	}
 
 	
