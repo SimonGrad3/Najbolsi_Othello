@@ -4,16 +4,16 @@ import splosno.Poteza;
 
 public class Igra {
 	
-	protected Igralec naPotezi;
-	protected Polje[][] plosca;
+	public Igralec naPotezi;
+	public Polje[][] plosca;
 	protected Polje[][] zadnjaPlosca;
 	protected boolean nazaj;
-	protected Stanje stanje;
+	public Stanje stanje;
 			
 	// x je vrstica 
 	// y je stolpec 
 	
-	//konstrunktor:
+	
 	public Igra() {
 		plosca = new Polje[8][8];
 		for (int i = 0; i < 8; i++) {

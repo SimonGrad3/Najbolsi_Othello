@@ -1,7 +1,13 @@
-package logika;
-
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
+import javax.swing.SwingWorker;
+
+import inteligenca.Inteligenca;
+import logika.Igra;
+import logika.Igralec;
+import logika.Polje;
+import logika.Stanje;
 import splosno.Poteza;
 
 public class IgrajOthello {
@@ -11,6 +17,10 @@ public class IgrajOthello {
 	}
 	
 	static Igra igra = new Igra();
+	
+	
+	//inteligenca......................................................................................
+	public static Inteligenca racunalnikovaInteligenca = new Inteligenca(); 
 	
 	//-----------------------------------------------------------------------------------------------------
 	//funkcije za izpis ----------------------------------------------------------------------------------
@@ -51,41 +61,45 @@ public class IgrajOthello {
 	}
 	
 	public static void odigraj() {
+//razveljavi potezo:
 		Scanner myObj = new Scanner(System.in); 
-		
-		System.out.println("Razveljavi zadnjo potezo? Vpisi 'da' ali pusti prazno: ");
-	    String r  = myObj.nextLine();
+//		System.out.println("Razveljavi zadnjo potezo? Vpisi 'da' ali pusti prazno: ");
+//	    String r  = myObj.nextLine();
 	    
-	    if (r.equals("da")) {
-	    	if (!igra.razveljaviPotezo()) {
-	    		System.out.println("Poteze ni mogoče razveljaviti!");
-	    		System.out.println();
+//	    if (r.equals("da")) {
+//	    	if (!igra.razveljaviPotezo()) {
+//	    		System.out.println("Poteze ni mogoče razveljaviti!");
+//	    		System.out.println();
+//	    	}
+//	    	igra.razveljaviPotezo();
+//	    }
+	    
+//	    else {
+	    	
+	    	if (igra.naPotezi == Igralec.CRN) { //odigra clovek
+			    System.out.println("Vnesi vrstico: ");
+			    int x  = myObj.nextInt(); 
+			    System.out.println("Vnesi stolpec: ");
+			    int y  = myObj.nextInt(); 
+			    System.out.println("Tvoja poteza: (" + x + ", " + y + ")");
+			    
+			    Poteza p = new Poteza(x, y);
+			    boolean i = igra.odigraj(p);
+			    
+			    if (!i) System.out.println("Odigrana poteza ni veljavna! Poskusi ponovno.");
 	    	}
-	    	igra.razveljaviPotezo();
-	    }
-	    else {
-		    System.out.println("Vnesi vrstico: ");
-		    int x  = myObj.nextInt(); 
-		    System.out.println("Vnesi stolpec: ");
-		    int y  = myObj.nextInt(); 
-		    System.out.println("Tvoja poteza: (" + x + ", " + y + ")");
-		    
-		    Poteza p = new Poteza(x, y);
-		    boolean i = igra.odigraj(p);
-		    
-		    if (!i) System.out.println("Odigrana poteza ni veljavna! Poskusi ponovno.");
-	    }
+	    	else { //igra racunalnik
+	    		Poteza p = racunalnikovaInteligenca.izberiPotezo(igra);
+	    		boolean i = igra.odigraj(p);
+			    if (!i) System.out.println("Odigrana poteza ni veljavna! Poskusi ponovno.");
+	    	}
+//	    }
+	    
 	    izpisiPlosco();
 	}
 
-	
-	public static void izpisiSeznam(String[] t) {
-		System.out.println();
-		for (int i = 0; i < t.length; ++i) {
-			System.out.print(t[i]);
-		}
-		System.out.println();
-	}
+	//------------------------------------------------------------------------------------------------
+	//pomozne funkicje za izpis----------------------------------------------------------------------
 	
 	public static void izpisiStanjeIgre(Igralec igralec) {
 		Stanje stanje = igra.stanjeIgre();
