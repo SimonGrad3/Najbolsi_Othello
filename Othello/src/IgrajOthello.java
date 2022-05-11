@@ -19,14 +19,14 @@ public class IgrajOthello {
 	static Igra igra = new Igra();
 	
 	
-	//inteligenca......................................................................................
+	//inteligenca---------------------------------------------------------------------------------------------
 	public static Inteligenca racunalnikovaInteligenca = new Inteligenca(); 
-	
 	//-----------------------------------------------------------------------------------------------------
 	//funkcije za izpis ----------------------------------------------------------------------------------
 	
 	public static void izpisiPlosco() {
 		Polje[][] plosca = igra.plosca;
+		Igralec igralec = igra.naPotezi;
 		
 		//izpis stanja igre
 		System.out.println("#########################################");
@@ -52,13 +52,34 @@ public class IgrajOthello {
 		System.out.println();
 		
 		izpisiStanjeZetonov();
-		izpisiMoznePoteze(igra.naPotezi);
+		
+		//izpis moznih potez
+		Poteza[] p = igra.moznePoteze(igralec, igra.plosca);
+		int d = igra.steviloMoznihPotez(igralec, igra.plosca);
+		System.out.println();
+		System.out.println("Mozne poteze za " + igralec.toString() + ": ");
+		if (d == 0) { //ce igralec ki je na vrsti nima moznih potez
+			System.out.println("Ni možnih potez za " + igralec.toString() + ".");
+			System.out.println("Nimaš možnih potez, zato bo odigral tvoj nasprotnik.");
+			igra.zamenjajIgralca();
+			if (Stanje.V_TEKU == igra.stanjeIgre()) odigraj();
+			else System.out.print("IGRE JE KONEC!");
+		}
+		else {//ce bo mozne poteze jih izpise in igra naprej
+			//izpis
+			for (int i = 0; i < d; ++i) {
+				System.out.println("- (" + p[i].getX() + ", " + p[i].getY() + ")");
+			}
+			//nadaljevanje igre
+			if (Stanje.V_TEKU == igra.stanjeIgre()) odigraj();
+			else System.out.print("IGRE JE KONEC!");
+		}
 		System.out.println();
 		
-		System.out.println("--------");
-		
-		if (igra.stanje == Stanje.V_TEKU) odigraj();
 	}
+	
+	
+	
 	
 	public static void odigraj() {
 //razveljavi potezo:
@@ -75,17 +96,15 @@ public class IgrajOthello {
 //	    }
 	    
 //	    else {
-	    	
+		
 	    	if (igra.naPotezi == Igralec.CRN) { //odigra clovek
 			    System.out.println("Vnesi vrstico: ");
 			    int x  = myObj.nextInt(); 
 			    System.out.println("Vnesi stolpec: ");
 			    int y  = myObj.nextInt(); 
 			    System.out.println("Tvoja poteza: (" + x + ", " + y + ")");
-			    
 			    Poteza p = new Poteza(x, y);
 			    boolean i = igra.odigraj(p);
-			    
 			    if (!i) System.out.println("Odigrana poteza ni veljavna! Poskusi ponovno.");
 	    	}
 	    	else { //igra racunalnik
@@ -93,9 +112,10 @@ public class IgrajOthello {
 	    		boolean i = igra.odigraj(p);
 			    if (!i) System.out.println("Odigrana poteza ni veljavna! Poskusi ponovno.");
 	    	}
+		
 //	    }
+		izpisiPlosco(); //izpise in na koncu klice odigraj z novimi podatki
 	    
-	    izpisiPlosco();
 	}
 
 	//------------------------------------------------------------------------------------------------
@@ -105,25 +125,25 @@ public class IgrajOthello {
 		Stanje stanje = igra.stanjeIgre();
 		System.out.println();
 		if (stanje == stanje.V_TEKU) System.out.println("Igra še ni končana. Na vrsti je " + igralec + ". ");
-		else if (stanje == Stanje.NEODLOCENO) System.out.println("Igra je koncana. Igralca sta izenačena.");
-		else if (stanje == Stanje.ZMAGA_CRN) System.out.println("Igra je koncana. Zmagal je črni.");
-		else if (stanje == Stanje.ZMAGA_BEL) System.out.println("Igra je koncana. Zmagal je beli.");
+		else if (stanje == Stanje.NEODLOCENO) System.out.println("IGRA JE KONCANA. Igralca sta izenačena.");
+		else if (stanje == Stanje.ZMAGA_CRN) System.out.println("IGRA JE KONCANA. Zmagal je črni.");
+		else if (stanje == Stanje.ZMAGA_BEL) System.out.println("IGRA JE KONCANA. Zmagal je beli.");
 	}
 	
 	
 	public static void izpisiStanjeZetonov() {
-		int[] t = igra.stanjeZetonov();
+		int[] t = igra.stanjeZetonov(igra.plosca);
 		System.out.println();
 		System.out.println("Crni: " + t[0]);
 		System.out.println("Beli: " + t[1]);
 	}
 	
 	public static void izpisiMoznePoteze(Igralec igralec) {
-		Poteza[] p = igra.moznePoteze();
-		int d = igra.steviloMoznihPotez();
+		Poteza[] p = igra.moznePoteze(igralec, igra.plosca);
+		int d = igra.steviloMoznihPotez(igralec, igra.plosca);
 		System.out.println();
 		System.out.println("Mozne poteze za " + igralec.toString() + ": ");
-		if (d == 0) System.out.println("Ni možnih potez. Igre je konec.");
+		if (d == 0) System.out.println("Ni možnih potez za " + igralec.toString() + ".");
 		else {
 			for (int i = 0; i < d; ++i) {
 				System.out.println("- (" + p[i].getX() + ", " + p[i].getY() + ")");

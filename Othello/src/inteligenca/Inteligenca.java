@@ -11,7 +11,8 @@ public class Inteligenca extends splosno.KdoIgra {
 	
 	public Poteza izberiPotezo(Igra igra) {
 		//radnom igralec, ki igra prvo potezo na seznamu moznih
-		Poteza poteza = igra.moznePoteze()[0];
+		if (igra.moznePoteze(igra.naPotezi, igra.plosca).length == 0) return null;
+		Poteza poteza = igra.moznePoteze(igra.naPotezi, igra.plosca)[0];
 		return poteza;
 	}
 

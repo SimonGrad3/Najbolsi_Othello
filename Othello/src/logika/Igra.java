@@ -352,8 +352,23 @@ public class Igra {
 	}
 	
 	public boolean odigraj(Poteza poteza) {
+		//prevelike stevilke
+		
+		if (poteza == null) {
+			naPotezi = naPotezi.nasprotnik();
+			return false;
+		}
+		if (stanje == Stanje.NEODLOCENO) return false;
+		if (stanje == Stanje.ZMAGA_CRN) return false;
+		if (stanje == Stanje.ZMAGA_BEL) return false;	
+		
 		int x = poteza.getX(); //vrstica
 		int y = poteza.getY(); //stolpec
+		
+		if ((x < 0) || (x > 7) || (y < 0) || (y > 7)) {
+			System.out.println("Prevelike stevilke za polje!");
+			return false;
+		}
 		
 		//ce je polje ze zasedeno
 		if (plosca[x][y] != Polje.PRAZNO) return false;
@@ -391,12 +406,16 @@ public class Igra {
 		
 	}
 	
+	public void zamenjajIgralca() {
+		naPotezi = naPotezi.nasprotnik();
+	}
+	
 //-----------------------------------------------------------------------------------------------------
 //MOZNE POTEZE----------------------------------------------------------------------------------------------
 	
 	//vsa mozna mesta za potezo 
-	public Poteza[] moznePoteze() {
-		Poteza[] poteze = new Poteza[steviloPraznihMest()];
+	public static Poteza[] moznePoteze(Igralec igralec, Polje[][] plosca) {
+		Poteza[] poteze = new Poteza[steviloPraznihMest(plosca)];
 		int stevec = 0;
 		for (int y = 0; y < 8; ++y) {
 			for (int x = 0; x < 8; ++x) {
@@ -411,10 +430,10 @@ public class Igra {
 					int mestoDiagonalaL = mestoDiagonalaL(x, y, plosca);
 					int mestoDiagonalaS = mestoDiagonalaS(x, y, plosca);
 					
-					boolean s = preveri(stolpec, mestoStolpec, naPotezi);
-					boolean v = preveri(vrstica, mestoVrstica, naPotezi);
-					boolean liha = preveri(diagonalaL, mestoDiagonalaL, naPotezi);
-					boolean soda = preveri(diagonalaS, mestoDiagonalaS, naPotezi);
+					boolean s = preveri(stolpec, mestoStolpec, igralec);
+					boolean v = preveri(vrstica, mestoVrstica, igralec);
+					boolean liha = preveri(diagonalaL, mestoDiagonalaL, igralec);
+					boolean soda = preveri(diagonalaS, mestoDiagonalaS, igralec);
 					
 					if (s || v || soda || liha) {
 						poteze[stevec] = new Poteza(x, y);
@@ -426,8 +445,8 @@ public class Igra {
 		return poteze;
 	}
 	
-	public int steviloMoznihPotez() {
-		Poteza[] moznePoteze = moznePoteze();
+	public static int steviloMoznihPotez(Igralec igralec, Polje[][] plosca) {
+		Poteza[] moznePoteze = moznePoteze(igralec, plosca);
 		for (int i = 0; i < moznePoteze.length; ++i) {
 			if (moznePoteze[i] == null) return i;
 		}
@@ -454,7 +473,7 @@ public class Igra {
 //STANJE-----------------------------------------------------------------------------------------------
 //preverjanje stanja : ali je konec igre, kdo je zmagal, stetje zetonov
 	
-	public int[] stanjeZetonov(){
+	public static int[] stanjeZetonov(Polje[][] plosca){
 		int crni = 0;
 		int beli = 0;
 		int[] stanje = new int[2];
@@ -471,15 +490,15 @@ public class Igra {
 		return stanje;
 	}
 	
-	public int steviloPraznihMest () {
-		int[] zetoni = stanjeZetonov();
+	public static int steviloPraznihMest (Polje[][] plosca) {
+		int[] zetoni = stanjeZetonov(plosca);
 		int beli = zetoni[1];
 		int crni = zetoni[0];
 		return (64 - beli - crni);
 	}
 	
 	public Igralec vodilniIgralec() {
-		int[] zetoni = stanjeZetonov();
+		int[] zetoni = stanjeZetonov(plosca);
 		int beli = zetoni[1];
 		int crni = zetoni[0];
 		if (beli > crni) return Igralec.BEL;
@@ -490,16 +509,17 @@ public class Igra {
 	
 	public Stanje stanjeIgre() {
 		//pogledamo ce ima igralec ki je na vrsti kaksno mozno potezo
-		int i = steviloMoznihPotez();
-		int n = steviloMoznihPotez();
+		int i = steviloMoznihPotez(naPotezi, plosca);
+		int n = steviloMoznihPotez(naPotezi.nasprotnik(), plosca);
 		Igralec vodilni = vodilniIgralec();
-		if ((n == 0 && i == 0) || steviloPraznihMest() == 0){ // ce noben igralec nima vec moznih potez ALI ni vec praznih mest je konec
+		if (n == 0 && i == 0){ // ce noben igralec nima vec moznih potez
 				if (vodilni == Igralec.BEL) return Stanje.ZMAGA_BEL;
-				else if (vodilni == Igralec.CRN) return Stanje.ZMAGA_CRN;
-				else if (vodilni == null) return Stanje.NEODLOCENO;
+				if (vodilni == Igralec.CRN) return Stanje.ZMAGA_CRN;
+				if (vodilni == null) return Stanje.NEODLOCENO;
 			}
 		//ce igra se ni koncana
 		return Stanje.V_TEKU;
+		
 	}
 }
 
