@@ -445,6 +445,20 @@ public class Igra {
 		return poteze;
 	}
 	
+	public static Poteza[] edineMoznePoteze (Igralec igralec, Polje[][] plosca) {
+		Poteza[] moznePoteze = moznePoteze(igralec, plosca);
+		int st = steviloMoznihPotez(igralec, plosca);
+		Poteza[] rezultat = new Poteza[st];
+		int i = 0;
+		for (Poteza p : moznePoteze) {
+			if (p != null) {
+				rezultat[i] = p;
+				++i;
+			}
+		}
+		return rezultat;
+	}
+	
 	public static int steviloMoznihPotez(Igralec igralec, Polje[][] plosca) {
 		Poteza[] moznePoteze = moznePoteze(igralec, plosca);
 		for (int i = 0; i < moznePoteze.length; ++i) {
