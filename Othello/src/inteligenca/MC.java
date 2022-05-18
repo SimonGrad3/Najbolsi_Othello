@@ -26,45 +26,90 @@ public class MC {
 	}
 	
 	
-//glavno 
+//glavno............................................................................... 
 	
-	public LinkedList<splosno.Poteza> izberiVejo(Poteza[] pot){ //vemo da so vse poteze ze bile odigane
+	public Poteza izberiPotezo(Igra igra) {
+		for (int i = 0; i < stPoskusov; ++i) {
+			odigraj();
+		}
+		Poteza izbranaPoteza = null;
+		Poteza[] moznePoteze = Igra.edineMoznePoteze(igra.naPotezi, igra.plosca);
+		double max = 0;
+		
+		for (Poteza p : moznePoteze) {
+			LinkedList<Poteza> pot = new LinkedList<Poteza>();
+			pot.add(p);
+			double[] value = drevo.get(pot);
+			double n = value[1];
+			if (n > max) izbranaPoteza = p;
+		}
+		return izbranaPoteza;
+	}
+	
+	public void odigraj() {
+		LinkedList<Poteza> pot = new LinkedList<Poteza>();
+		LinkedList<Poteza> novaPot = izberiVejo(pot);
+		odigraj(novaPot);
+	}
+	
+	
+	public void odigraj(LinkedList<Poteza> pot){
+		if (obstajaPraznaPot(pot)) {
+			LinkedList<Poteza> praznaPot = najdiPraznoPot(pot);
+			pomoznaFunkcija(praznaPot);
+		}
+		else {
+			LinkedList<Poteza> novaPot = izberiVejo(pot);
+			odigraj(novaPot);
+		}
+	}
+	
+	public void pomoznaFunkcija(LinkedList<Poteza> pot) {
+		//expansion
+		//simulation
+		//back
+	}
+	
+	
+	
+//pomozne funkcije.............................................................
+	
+	public Igra odigrajPoPoti(LinkedList<Poteza> pot) {
 		Igra igra = new Igra();
 		for (Poteza p : pot){
 			igra.odigraj(p);
 		}
-		Poteza[] poteze = igra.edineMoznePoteze(igra.naPotezi, igra.plosca);
-		if (najdiPraznoPotezo != null) {
-			pomožnaFunkcija 
-		}
-		else {
-		
-		//fukcija formula izbere potezo
-		//izberi vejo...
-		}
-		return indeksDrevesa;
+		return igra;
 	}
 	
-	public Poteza najdiPraznoPotezo(Poteza[] poteze) {
-		Poteza praznaPoteza = null;
-		for (Poteza p : poteze) {
-			if (!drevo.containsKey(p)) {
-				praznaPoteza = p ;
+	public LinkedList<Poteza> najdiPraznoPot(LinkedList<Poteza> pot) {
+		Igra igra = odigrajPoPoti(pot);
+		LinkedList<Poteza> praznaPot = null;
+		Poteza[] moznePoteze = Igra.edineMoznePoteze(igra.naPotezi, igra.plosca);
+		
+		for (Poteza p : moznePoteze) {
+			pot.add(p);
+			if (!drevo.containsKey(pot)) {
+				praznaPot = pot;
 				break;
 			}
+			pot.removeLast();
 		}
-		return praznaPoteza;
+		return praznaPot;
+	}
+	
+	public boolean obstajaPraznaPot(LinkedList<Poteza> pot) {
+		if (najdiPraznoPot(pot) != null) return true;
+		else return false;
 	}
 	
 	
 //1.selection.......................................................................
 	
-	public LinkedList<Poteza> izberiVejo(LinkedList<Poteza> pot){ //vemo da so vse poteze ze bile odigane
-		Igra igra = new Igra();
-		for (Poteza p : pot){
-			igra.odigraj(p);
-		}
-		Poteza[] moznePoteze = igra.edineMoznePoteze(igra.naPotezi, igra.plosca);
+	public LinkedList<Poteza> izberiVejo(LinkedList<Poteza> pot){ 
+		//vemo da so vse poteze ze bile odigane. po formuli izberemo tisto pa kateri bomo nadaljevali
+		Igra igra = odigrajPoPoti(pot);
+		Poteza[] moznePoteze = Igra.edineMoznePoteze(igra.naPotezi, igra.plosca);
 		
 		double[] value = drevo.get(pot);
 		double W = value[0];
@@ -95,14 +140,21 @@ public class MC {
 	
 //2. expansion............................................................
 	
+	public void expansion(Igra igra) {
+		
+	}
+	
+	
 	
 //3.simulation.............................................................
 	
+	//simulation se vedno zacne na tocki, ki se ni bila obiskana
+	
 	public static Igralec simulation(Igra igra) {
-		return OdigrajRandomIgro.odigraj(igra);
+		return OdigrajRandomIgro.odigraj(igra); //vrne igralca, ki je zmagal igro. ce vrne null je izenaceno.
 	}
 	
-//4.back...................................................................
+//4.backpropagation...................................................................
 	
 	public void popraviDrevo (LinkedList<Poteza> pot, Igralec zmaga){
 	        int dolzina = pot.size();
