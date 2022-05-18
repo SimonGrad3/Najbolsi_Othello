@@ -20,7 +20,14 @@ public class OdigrajRandomIgro {
 	public static Igralec odigraj(Igra igra) {
 		Poteza p = izberiRandomPotezo(igra);
 		if (p == null) igra.zamenjajIgralca(); //igralec na vrsti nima mozne poteze
-		if (Stanje.V_TEKU == igra.stanjeIgre()) odigraj(igra);
+		if (Stanje.V_TEKU == igra.stanjeIgre()) {
+			if (igra.odigraj(p)) {
+				igra.odigraj(p);
+				odigraj(igra);
+			}
+			else
+			return igra.vodilniIgralec();
+		}
 		else return igra.vodilniIgralec();
 		return igra.vodilniIgralec();
 	}

@@ -413,7 +413,7 @@ public class Igra {
 //-----------------------------------------------------------------------------------------------------
 //MOZNE POTEZE----------------------------------------------------------------------------------------------
 	
-	//vsa mozna mesta za potezo 
+	//vsa mozna mesta za potezo, vmes je nekaj mest napoljnjenih z null
 	public static Poteza[] moznePoteze(Igralec igralec, Polje[][] plosca) {
 		Poteza[] poteze = new Poteza[steviloPraznihMest(plosca)];
 		int stevec = 0;
@@ -445,7 +445,7 @@ public class Igra {
 		return poteze;
 	}
 	
-	public static Poteza[] edineMoznePoteze (Igralec igralec, Polje[][] plosca) {
+	public static Poteza[] edineMoznePoteze (Igralec igralec, Polje[][] plosca) { //preciscene mozne poteze (nobena ni null)
 		Poteza[] moznePoteze = moznePoteze(igralec, plosca);
 		int st = steviloMoznihPotez(igralec, plosca);
 		Poteza[] rezultat = new Poteza[st];

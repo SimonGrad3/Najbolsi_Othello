@@ -19,8 +19,11 @@ public class MC {
 	
 	protected int steviloPoskusov = 10;	
 	
-	public List<splosno.Poteza> izbireriVejo(Igra igra){
-		Poteza[] poteze = igra.moznePoteze(igra.naPotezi, igra.plosca);
+	
+//1.selection.......................................................................
+	
+	public List<splosno.Poteza> izberiVejo(Igra igra){
+		Poteza[] poteze = igra.edineMoznePoteze(igra.naPotezi, igra.plosca);
 		//List<splosno.Poteza>[ moznePoti  = new LinkedList<splosno.Poteza>[poteze.length]; 
 		if (najdiPraznoPotezo != null) {
 			pomožnaFunkcija 
@@ -34,6 +37,8 @@ public class MC {
 	}
 	
 	
+	
+	
 	public Poteza najdiPraznoPotezo(Poteza[] poteze) {
 		Poteza praznaPoteza = null;
 		for (Poteza p : poteze) {
@@ -42,10 +47,19 @@ public class MC {
 				break;
 			}
 		}
+		return praznaPoteza;
 	}
 	
-	//RANDOM IGRA...............................................................................
+	
+	
+//2. expansion............................................................
+	
+//3.simulation.............................................................
+	
+	public static simulation() {
 		
+	}
+	
 	public static Poteza izberiRandomPotezo(Igra igra) {
 		return RandomIgralec.izberiPotezo(igra);
 	}
@@ -58,3 +72,5 @@ public class MC {
 		return igra.vodilniIgralec();
 	}	
 }
+
+//4.back...................................................................
