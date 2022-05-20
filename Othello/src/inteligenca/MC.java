@@ -28,7 +28,7 @@ public class MC {
 	public MC(Igra igra, int st) {
 		MC.igra = igra;
 		this.jaz = igra.naPotezi;
-		this.stPoskusov = 3;
+		this.stPoskusov = 5;
 	}
 
 //print............................................................................
@@ -77,13 +77,11 @@ public class MC {
 	
 	public void odigraj(LinkedList<Poteza> pot){
 		printPot(pot);
-		System.out.println("Sem v odigraj");
 		LinkedList<Poteza> praznaPot = najdiPraznoPot(pot);
 		if (praznaPot != null) {
 			System.out.println("Nasel sem prazno pot");
 			printPot(praznaPot);
 			pomoznaFunkcija(praznaPot);
-			printDrevo(drevo);
 		}
 		else {
 			System.out.println("Nisem nasel prazne poti");
@@ -94,13 +92,10 @@ public class MC {
 	
 	public void pomoznaFunkcija(LinkedList<Poteza> pot) {
 		System.out.println("sem v pomozni funkciji");
-		printPot(pot);
 		expansion(pot);
-		System.out.println("Naredil sem expansion");
 		Igralec zmagovalec = simulation(odigrajPoPoti(pot));
 		System.out.println("Zmagovalec random igre: " + zmagovalec.toString());
 		popraviDrevo(pot, zmagovalec);
-		System.out.println("Popravil sem pot");
 		System.out.println("Koncal sem v pomozni funkciji");
 		
 	}
@@ -148,8 +143,6 @@ public class MC {
 		
 		for (Poteza p : moznePoteze) {
 			pot.add(p);
-			System.out.println("Pot z mozno potezo:");
-			printPot(pot);
 			if (!drevo.containsKey(pot)) {
 				System.out.println("To je izbrana prazna pot:");
 				printPot(pot);
@@ -198,7 +191,6 @@ public class MC {
 //2. expansion............................................................
 	
 	public void expansion(LinkedList<Poteza> pot) {
-		System.out.println("sem v expansion");
 		double[] prazenVnos = new double[2];
 		prazenVnos[0] = 0.0;
 		prazenVnos[1] = 0.0;
@@ -211,47 +203,43 @@ public class MC {
 	
 	public static Igralec simulation(Igra igra) {
 		Igralec z = OdigrajRandomIgro.odigraj(igra);
-		System.out.println(z.toString());
 		return z; //vrne igralca, ki je zmagal igro. ce vrne null je izenaceno.
 	}
 	
 //4.backpropagation...................................................................
 	
+	
 	public void popraviDrevo (LinkedList<Poteza> pot, Igralec zmaga){
-	        int dolzina = pot.size();
-	        while (dolzina > 0) {
-	   
-	            double[] value = drevo.get(pot);
-	            System.out.println(dolzina);
-	            System.out.println(value[0]);
-	            System.out.println(value[1]);
-	            double x = value[0];
-	            if(dolzina % 2 == 0 ) {
-	                if(zmaga == jaz) x += 1.0;
-	                else if (zmaga == null) {
-	                    x += 0.5;   
-	                }
-	            }
-	            else {
-	                if(zmaga != jaz) x += 1.0;
-	                else if (zmaga == null) {
-	                    x += 0.5;   
-	                }
-	            }
-	            value[0] = x;
-	            value[1] += 1.0;
-	            drevo.put(pot, value);
-	            printDrevo(drevo);
-	            
-	            System.out.println("Zdej ko je zpisu");
-	            System.out.println(value[0]);
-	            System.out.println(value[1]);
-	            
-	            pot.removeLast();
-	            printDrevo(drevo);
-	            dolzina = pot.size();
-	        }
-	        
-	        //printDrevo(drevo);
-	    }
+        int dolzina = pot.size();
+
+        if(dolzina > 0) {
+
+            double[] value = drevo.get(pot);
+            double x = value[0];
+            if(dolzina % 2 == 0 ) {
+                if(zmaga == jaz) x += 1.0;
+                else if (zmaga == null) {
+                    x += 0.5;
+                }
+            }
+            else {
+                if(zmaga != jaz) x += 1.0;
+                else if (zmaga == null) {
+                    x += 0.5;
+                }
+            }
+            value[0] = x;
+            value[1] += 1.0;
+            
+            printDrevo(drevo);
+            drevo.put(pot, value);
+            
+            LinkedList<Poteza> novaPot = new LinkedList<Poteza>(pot);
+            novaPot.removeLast();
+            printDrevo(drevo);
+            popraviDrevo (novaPot, zmaga);
+        }
+
+    }
+
 }
