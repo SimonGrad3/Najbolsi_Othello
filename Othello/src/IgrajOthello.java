@@ -14,7 +14,7 @@ import splosno.Poteza;
 public class IgrajOthello {
 
 	public static void main(String[] args) {		
-		RacunalnikRacunalnik();
+		ClovekRacunalnik();
 	}
 	
 	static Igra igra = new Igra();
@@ -181,6 +181,7 @@ public class IgrajOthello {
 			    if (!i) System.out.println("Odigrana poteza ni veljavna! Poskusi ponovno.");
 	    	}
 	    	else { //igra racunalnik
+	    		System.out.println("Na vrsti je racunalnik. Barva: " + igra.naPotezi.toString());
 	    		Poteza p = racunalnikovaInteligenca.izberiPotezo(igra);
 	    		System.out.println("Tvoja poteza: (" + p.getX() + ", " + p.getY() + ")");
 	    		boolean i = igra.odigraj(p);

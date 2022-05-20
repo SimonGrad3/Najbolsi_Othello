@@ -14,7 +14,9 @@ public enum Igralec {
 	
 	@Override
 	public String toString() {
-		return (this == BEL ? "B" : "C");
+		if (this == BEL) return "B";
+		else if (this == CRN) return "C";
+		else return "N";
 	}
 	
 }

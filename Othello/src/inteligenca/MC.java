@@ -12,25 +12,52 @@ import logika.Stanje;
 import splosno.Poteza;
 
 public class MC {
+	
+//	public static void main(String[] args) {		
+//		printDrevo(drevo);
+//	}
 
 	protected LinkedList<Poteza> indeksDrevesa; //pot je seznam potez
 	protected double[] vnosDrevesa; //[zmage, vsiPoskusi]
-	protected HashMap<LinkedList<Poteza>, double[]> drevo = new HashMap<LinkedList<splosno.Poteza>, double[]>();
+	protected static HashMap<LinkedList<Poteza>, double[]> drevo = new HashMap<LinkedList<splosno.Poteza>, double[]>();
 	
 	protected Igralec jaz;
+	protected static Igra igra;
 	protected int stPoskusov;	
 	
 	public MC(Igra igra, int st) {
-		jaz = igra.naPotezi;
-		this.stPoskusov = st;
+		MC.igra = igra;
+		this.jaz = igra.naPotezi;
+		this.stPoskusov = 3;
 	}
+
+//print............................................................................
 	
+	public static void printDrevo (HashMap<LinkedList<Poteza>, double[]> drevo) {
+			System.out.println("Drevo: --------------------");
+	         for (LinkedList<Poteza> poteza: drevo.keySet()) {
+	             String key = poteza.toString();
+	             double[] value = drevo.get(poteza);
+	             double x = value[0];
+	             double y = value[1];
+	             System.out.println("{ " + key + ", (" + x + ", " + y + ") }");
+	         }
+	         System.out.println("------------------------------");
+	     }
 	
+	public static void printPot(LinkedList<Poteza> pot) {
+		System.out.println("Printam pot: ");
+		for (int i = 0; i < pot.size(); ++i) {
+			System.out.println(pot.get(i).toString());
+		}
+	}
+
 //glavno............................................................................... 
 	
-	public Poteza izberiPotezo(Igra igra) {
+	public Poteza izberiPotezo() {
 		for (int i = 0; i < stPoskusov; ++i) {
-			odigraj();
+			LinkedList<Poteza> praznaPot = new LinkedList<Poteza>();
+			odigraj(praznaPot);
 		}
 		Poteza izbranaPoteza = null;
 		Poteza[] moznePoteze = Igra.edineMoznePoteze(igra.naPotezi, igra.plosca);
@@ -43,64 +70,94 @@ public class MC {
 			double n = value[1];
 			if (n > max) izbranaPoteza = p;
 		}
+		
+		System.out.println("Izbrana poteza: " + izbranaPoteza.toString());
 		return izbranaPoteza;
 	}
 	
-	public void odigraj() {
-		LinkedList<Poteza> pot = new LinkedList<Poteza>();
-		LinkedList<Poteza> novaPot = izberiVejo(pot);
-		odigraj(novaPot);
-	}
-	
-	
 	public void odigraj(LinkedList<Poteza> pot){
-		if (obstajaPraznaPot(pot)) {
-			LinkedList<Poteza> praznaPot = najdiPraznoPot(pot);
+		printPot(pot);
+		System.out.println("Sem v odigraj");
+		LinkedList<Poteza> praznaPot = najdiPraznoPot(pot);
+		if (praznaPot != null) {
+			System.out.println("Nasel sem prazno pot");
+			printPot(praznaPot);
 			pomoznaFunkcija(praznaPot);
+			printDrevo(drevo);
 		}
 		else {
+			System.out.println("Nisem nasel prazne poti");
 			LinkedList<Poteza> novaPot = izberiVejo(pot);
 			odigraj(novaPot);
 		}
 	}
 	
 	public void pomoznaFunkcija(LinkedList<Poteza> pot) {
-		//expansion
-		//simulation
-		//back
+		System.out.println("sem v pomozni funkciji");
+		printPot(pot);
+		expansion(pot);
+		System.out.println("Naredil sem expansion");
+		Igralec zmagovalec = simulation(odigrajPoPoti(pot));
+		System.out.println("Zmagovalec random igre: " + zmagovalec.toString());
+		popraviDrevo(pot, zmagovalec);
+		System.out.println("Popravil sem pot");
+		System.out.println("Koncal sem v pomozni funkciji");
+		
 	}
-	
 	
 	
 //pomozne funkcije.............................................................
 	
-	public Igra odigrajPoPoti(LinkedList<Poteza> pot) {
-		Igra igra = new Igra();
-		for (Poteza p : pot){
-			igra.odigraj(p);
+	public static Igra kopijaIgre(Igra igra) {
+		Igra novaIgra = new Igra();
+		//prepis plosce
+		Polje[][] staraPlosca = igra.plosca;
+		for (int x = 0; x < 8; ++x) {
+			for (int y = 0; y < 8; ++y) {
+				novaIgra.plosca[x][y] = staraPlosca[x][y];
+			}
 		}
-		return igra;
+		//prepis igralca in stanja
+		Igralec starIgralec = igra.naPotezi;
+		Stanje staroStanje = igra.stanje;
+		novaIgra.naPotezi = starIgralec;
+		novaIgra.stanje = staroStanje;
+		return novaIgra;
+	}
+	
+	
+	public static Igra odigrajPoPoti(LinkedList<Poteza> pot) {
+		Igra novaIgra = kopijaIgre(igra);
+		for (Poteza p : pot){
+			novaIgra.odigraj(p);
+		}
+		return novaIgra;
 	}
 	
 	public LinkedList<Poteza> najdiPraznoPot(LinkedList<Poteza> pot) {
-		Igra igra = odigrajPoPoti(pot);
-		LinkedList<Poteza> praznaPot = null;
-		Poteza[] moznePoteze = Igra.edineMoznePoteze(igra.naPotezi, igra.plosca);
+		Igra novaIgra = odigrajPoPoti(pot);
+		Poteza[] moznePoteze = Igra.edineMoznePoteze(novaIgra.naPotezi, novaIgra.plosca);
+		
+
+		System.out.println("Printam mozne poteze: ");
+		System.out.println(moznePoteze.length);
+		for(int i = 0; i < moznePoteze.length; ++i) {
+			System.out.println(moznePoteze[i].toString());
+		}
+		System.out.println("Konec moznih potez.");
 		
 		for (Poteza p : moznePoteze) {
 			pot.add(p);
+			System.out.println("Pot z mozno potezo:");
+			printPot(pot);
 			if (!drevo.containsKey(pot)) {
-				praznaPot = pot;
-				break;
+				System.out.println("To je izbrana prazna pot:");
+				printPot(pot);
+				return pot;
 			}
-			pot.removeLast();
+			else pot.removeLast();
 		}
-		return praznaPot;
-	}
-	
-	public boolean obstajaPraznaPot(LinkedList<Poteza> pot) {
-		if (najdiPraznoPot(pot) != null) return true;
-		else return false;
+		return null;
 	}
 	
 	
@@ -140,18 +197,22 @@ public class MC {
 	
 //2. expansion............................................................
 	
-	public void expansion(Igra igra) {
-		
+	public void expansion(LinkedList<Poteza> pot) {
+		System.out.println("sem v expansion");
+		double[] prazenVnos = new double[2];
+		prazenVnos[0] = 0.0;
+		prazenVnos[1] = 0.0;
+		drevo.put(pot, prazenVnos);
 	}
-	
-	
 	
 //3.simulation.............................................................
 	
 	//simulation se vedno zacne na tocki, ki se ni bila obiskana
 	
 	public static Igralec simulation(Igra igra) {
-		return OdigrajRandomIgro.odigraj(igra); //vrne igralca, ki je zmagal igro. ce vrne null je izenaceno.
+		Igralec z = OdigrajRandomIgro.odigraj(igra);
+		System.out.println(z.toString());
+		return z; //vrne igralca, ki je zmagal igro. ce vrne null je izenaceno.
 	}
 	
 //4.backpropagation...................................................................
@@ -159,26 +220,38 @@ public class MC {
 	public void popraviDrevo (LinkedList<Poteza> pot, Igralec zmaga){
 	        int dolzina = pot.size();
 	        while (dolzina > 0) {
+	   
 	            double[] value = drevo.get(pot);
+	            System.out.println(dolzina);
+	            System.out.println(value[0]);
+	            System.out.println(value[1]);
 	            double x = value[0];
 	            if(dolzina % 2 == 0 ) {
-	                if(zmaga == jaz) x += 1;
+	                if(zmaga == jaz) x += 1.0;
 	                else if (zmaga == null) {
 	                    x += 0.5;   
 	                }
 	            }
 	            else {
-	                if(zmaga != jaz) x += 1;
+	                if(zmaga != jaz) x += 1.0;
 	                else if (zmaga == null) {
 	                    x += 0.5;   
 	                }
 	            }
 	            value[0] = x;
-	            value[1] += 1;
-	            drevo.put(pot,value);
-	           
-	            int index = pot.size() - 1;
-	            pot.remove(index);
+	            value[1] += 1.0;
+	            drevo.put(pot, value);
+	            printDrevo(drevo);
+	            
+	            System.out.println("Zdej ko je zpisu");
+	            System.out.println(value[0]);
+	            System.out.println(value[1]);
+	            
+	            pot.removeLast();
+	            printDrevo(drevo);
+	            dolzina = pot.size();
 	        }
+	        
+	        //printDrevo(drevo);
 	    }
 }
