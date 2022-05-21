@@ -28,7 +28,7 @@ public class MC {
 	public MC(Igra igra, int st) {
 		MC.igra = igra;
 		this.jaz = igra.naPotezi;
-		this.stPoskusov = 5;
+		this.stPoskusov = 10;
 	}
 
 //print............................................................................
@@ -45,29 +45,54 @@ public class MC {
 	         System.out.println("------------------------------");
 	     }
 	
+//	public static void printPot(LinkedList<Poteza> pot) {
+//		System.out.println("Printam pot: ");
+//		for (int i = 0; i < pot.size(); ++i) {
+//			System.out.println(pot.get(i).toString());
+//		}
+	
+	
+//	}
+	
 	public static void printPot(LinkedList<Poteza> pot) {
-		System.out.println("Printam pot: ");
-		for (int i = 0; i < pot.size(); ++i) {
-			System.out.println(pot.get(i).toString());
-		}
+		System.out.print(pot);
 	}
 
 //glavno............................................................................... 
 	
 	public Poteza izberiPotezo() {
+		LinkedList<Poteza> pp = new LinkedList<Poteza>();
+		pp.add(new Poteza(10, 10));
+		
+		double[] a = new double[2];
+		a[0] = 0;
+		a[1] = 0;
+		
+		drevo.put(pp, a);
+		
 		for (int i = 0; i < stPoskusov; ++i) {
 			LinkedList<Poteza> praznaPot = new LinkedList<Poteza>();
+			praznaPot.add(new Poteza(10, 10));
 			odigraj(praznaPot);
 		}
+		System.out.println("Koncal sem z pokskusi.");
+		
 		Poteza izbranaPoteza = null;
 		Poteza[] moznePoteze = Igra.edineMoznePoteze(igra.naPotezi, igra.plosca);
 		double max = 0;
 		
 		for (Poteza p : moznePoteze) {
-			LinkedList<Poteza> pot = new LinkedList<Poteza>();
+			LinkedList<Poteza> praznaPot = new LinkedList<Poteza>();
+			praznaPot.add(new Poteza(10, 10));
+			LinkedList<Poteza> pot = new LinkedList<Poteza>(praznaPot);
+			
+			
 			pot.add(p);
+			printPot(pot);
 			double[] value = drevo.get(pot);
 			double n = value[1];
+			System.out.println(n);
+			
 			if (n > max) izbranaPoteza = p;
 		}
 		
@@ -94,7 +119,8 @@ public class MC {
 		System.out.println("sem v pomozni funkciji");
 		expansion(pot);
 		Igralec zmagovalec = simulation(odigrajPoPoti(pot));
-		System.out.println("Zmagovalec random igre: " + zmagovalec.toString());
+		if (zmagovalec == null) System.out.println("Zmagovalec random igre: N");
+		else System.out.println("Zmagovalec random igre: " + zmagovalec.toString());
 		popraviDrevo(pot, zmagovalec);
 		System.out.println("Koncal sem v pomozni funkciji");
 		
@@ -157,22 +183,29 @@ public class MC {
 //1.selection.......................................................................
 	
 	public LinkedList<Poteza> izberiVejo(LinkedList<Poteza> pot){ 
+		printPot(pot);
 		//vemo da so vse poteze ze bile odigane. po formuli izberemo tisto pa kateri bomo nadaljevali
 		Igra igra = odigrajPoPoti(pot);
 		Poteza[] moznePoteze = Igra.edineMoznePoteze(igra.naPotezi, igra.plosca);
 		
+		printPot(pot);
+		printDrevo(drevo);
 		double[] value = drevo.get(pot);
 		double W = value[0];
 		double N = value[1];
+		System.out.println(W);
+		System.out.println(N);
 		
 		Poteza izbranaPoteza = null;
 		double max = 0;
 		
 		for (Poteza p : moznePoteze) {
-			pot.add(p);
-			double vrednost = formula(pot, W, N);
+			LinkedList<Poteza> novaPot = new LinkedList<Poteza>(pot);
+			novaPot.add(p);
+			double vrednost = formula(novaPot, W, N);
+			System.out.println("Vrednosti: ");
+			System.out.println(vrednost);
 			if (vrednost > max) izbranaPoteza = p;
-			pot.removeLast();
 		}
 		
 		pot.add(izbranaPoteza);
@@ -180,9 +213,18 @@ public class MC {
 	}
 	
 	public double formula(LinkedList<Poteza> pot, double W, double N) {
+//		System.out.println("W: ");
+//		System.out.println(W);
+//		System.out.println("N: ");
+//		System.out.println(N);
 		double[] value = drevo.get(pot);
+		printPot(pot);
 		double w = value[0];
+//		System.out.println("w: ");
+//		System.out.println(w);
 		double n = value[1];
+//		System.out.println("n: ");
+//		System.out.println(n);
 		double C = Math.sqrt(2);
 		return W/n + C * Math.sqrt( Math.log(N) / n);
 	}
@@ -216,7 +258,7 @@ public class MC {
 
             double[] value = drevo.get(pot);
             double x = value[0];
-            if(dolzina % 2 == 0 ) {
+            if(dolzina % 2 == 1 ) {
                 if(zmaga == jaz) x += 1.0;
                 else if (zmaga == null) {
                     x += 0.5;
@@ -230,8 +272,7 @@ public class MC {
             }
             value[0] = x;
             value[1] += 1.0;
-            
-            printDrevo(drevo);
+          
             drevo.put(pot, value);
             
             LinkedList<Poteza> novaPot = new LinkedList<Poteza>(pot);
