@@ -14,8 +14,14 @@ public class Inteligenca extends splosno.KdoIgra {
 	}
 	
 	public Poteza izberiPotezo(Igra igra) {
-		MC mc = new MC(igra, 5);
-		return mc.izberiPotezo();
+		try {
+			MC mc = new MC(igra, 100);
+			return mc.izberiPotezo();
+			}
+		catch(Exception e) {
+			  return RandomIgralec.izberiPotezo(igra);
+		
+		}
 	}
 
 }
