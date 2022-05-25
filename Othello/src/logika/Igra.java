@@ -48,6 +48,7 @@ public class Igra {
 	
 	//-----------------------------------------------------------------------------------------------------
 	//funkcije get ----------------------------------------------------------------------------------------
+	//funkcije, ki poberejo doloceno vrstico/stolpec/diagonalo iz plosce
 	
 	public static Polje[] getVrstica(int x, int y, Polje[][] plosca) {
 			return plosca[x];
@@ -103,7 +104,7 @@ public class Igra {
 	}
 	
 	//------------------------------------------------------------------------------------------------------
-	//mesto jajcka -----------------------------------------------------------------------------------------
+	//mesto polja v diagonali ------------------------------------------------------------------------------
 	
 	public static int mestoDiagonalaL(int x, int y, Polje[][] plosca) {
 		if (x == 0) return 0;
@@ -230,14 +231,13 @@ public class Igra {
 		else  return -1;
 	}
 	
-	
 	//------------------------------------------------------------------------------------------------------
 	//preveri in spremeni--------------------------------------------------------------------------------------------
 	
-	//preveri vzame seznam in lokacijo jajcka, barva igralca; preveri bele crne sosede
+	//vzame seznam in lokacijo polja in barva igralca; preveri bele in crne sosede
 	public static boolean preveri(Polje[] seznam, int i, Igralec igralec) { 
 		Igralec nasprotnik = igralec.nasprotnik();
-		// i - oznaèuje mesto poteze. 
+		// i - oznacuje mesto poteze. 
 		// Preverimo, da je vsaj en element enak nasprotnemu znakcu.
 		int d = seznam.length;
 		
@@ -274,7 +274,7 @@ public class Igra {
 	
 	public static Polje[] spremeni(Polje[] seznam, int i,Igralec igralec) { 
 		Igralec nasprotnik = igralec.nasprotnik();
-		// i - oznaèuje mesto poteze. 
+		// i - oznacuje mesto poteze. 
 		// Preverimo, da je vsaj en element enak nasprotnemu znakcu.
 		int d = seznam.length;
 		
@@ -306,6 +306,7 @@ public class Igra {
 	
 	//-----------------------------------------------------------------------------------------------------
 	//vlozi------------------------------------------------------------------------------------------------
+	//spremenjene vrstice/diagonale/stolpce vlozi nazaj v plosco
 	
 	public static Polje[][] vloziVrstico(int x, int y, Polje[] vrstica, Polje[][] plosca) {
 		plosca[x] = vrstica;
@@ -340,7 +341,8 @@ public class Igra {
 	}
 	
 	//-------------------------------------------------------------------------------------------------------
-	//-------------------------------------------------------------------------------------------------------
+	//GLAVNO ------------------------------------------------------------------------------------------------------
+	
 	public Polje[][] kopijaPlosce(Polje[][] plosca) {
 		Polje[][] kopija = new Polje[8][8];
 		for (int i = 0; i < 8; i++) {
@@ -352,7 +354,6 @@ public class Igra {
 	}
 	
 	public boolean odigraj(Poteza poteza) {
-		//prevelike stevilke
 		
 		if (poteza == null) {
 			naPotezi = naPotezi.nasprotnik();
@@ -366,7 +367,7 @@ public class Igra {
 		int y = poteza.getY(); //stolpec
 		
 		if ((x < 0) || (x > 7) || (y < 0) || (y > 7)) {
-			System.out.println("Prevelike stevilke za polje!");
+//			System.out.println("Prevelike stevilke za polje!");
 			return false;
 		}
 		
@@ -402,8 +403,6 @@ public class Igra {
 		naPotezi = naPotezi.nasprotnik();
 		
 		return true; //true pomeni, da je odrigral potezo
-		
-		
 	}
 	
 	public void zamenjajIgralca() {
@@ -504,7 +503,7 @@ public class Igra {
 		return stanje;
 	}
 	
-	public static int steviloPraznihMest (Polje[][] plosca) {
+	public static int steviloPraznihMest(Polje[][] plosca) {
 		int[] zetoni = stanjeZetonov(plosca);
 		int beli = zetoni[1];
 		int crni = zetoni[0];

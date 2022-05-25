@@ -23,7 +23,6 @@ public class IgrajOthello {
 	
 	
 	//RACUNALNIK PROTI RACUNALNIKU
-	
 	public static void RacunalnikRacunalnik() {
 		izpisiPlosco1();
 	}
@@ -155,20 +154,20 @@ public class IgrajOthello {
 	
 	
 	public static void odigraj2() {
-//razveljavi potezo:
+		//razveljavi potezo:
 		Scanner myObj = new Scanner(System.in); 
-//		System.out.println("Razveljavi zadnjo potezo? Vpisi 'da' ali pusti prazno: ");
-//	    String r  = myObj.nextLine();
+		System.out.println("Razveljavi zadnjo potezo? Vpisi 'da' ali pusti prazno: ");
+	    String r  = myObj.nextLine();
 	    
-//	    if (r.equals("da")) {
-//	    	if (!igra.razveljaviPotezo()) {
-//	    		System.out.println("Poteze ni mogoče razveljaviti!");
-//	    		System.out.println();
-//	    	}
-//	    	igra.razveljaviPotezo();
-//	    }
+	    if (r.equals("da")) {
+	    	if (!igra.razveljaviPotezo()) {
+	    		System.out.println("Poteze ni mogoče razveljaviti!");
+	    		System.out.println();
+	    	}
+	    	igra.razveljaviPotezo();
+	    }
 	    
-//	    else {
+	    else {
 		
 	    	if (igra.naPotezi == Igralec.CRN) { //odigra clovek
 			    System.out.println("Vnesi vrstico: ");
@@ -190,12 +189,9 @@ public class IgrajOthello {
 		
 //	    }
 		izpisiPlosco2(); //izpise in na koncu klice odigraj z novimi podatki
-	    
+	    }
 	}
 
-	
-	
-	
 	
 	//------------------------------------------------------------------------------------------------
 	//pomozne funkicje za izpis----------------------------------------------------------------------
