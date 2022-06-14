@@ -20,8 +20,7 @@ public class IgrajOthello {
 	static Igra igra = new Igra();
 	public static Inteligenca racunalnikovaInteligenca = new Inteligenca(); 
 	//-----------------------------------------------------------------------------------------------------
-	
-	
+
 	//RACUNALNIK PROTI RACUNALNIKU
 	public static void RacunalnikRacunalnik() {
 		izpisiPlosco1();

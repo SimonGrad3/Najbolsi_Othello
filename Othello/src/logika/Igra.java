@@ -356,6 +356,8 @@ public class Igra {
 	public boolean odigraj(Poteza poteza) {
 		
 		if (poteza == null) {
+//			verjetno ni moznih potez zato je igralec ogigral null
+//			zato samo zamenjamo igralca, ker ima mogoce on kaksno mozno potezo
 			naPotezi = naPotezi.nasprotnik();
 			return false;
 		}
@@ -414,11 +416,11 @@ public class Igra {
 	
 	//vsa mozna mesta za potezo, vmes je nekaj mest napoljnjenih z null
 	public static Poteza[] moznePoteze(Igralec igralec, Polje[][] plosca) {
-		Poteza[] poteze = new Poteza[steviloPraznihMest(plosca)];
+		Poteza[] poteze = new Poteza[60];
 		int stevec = 0;
 		for (int y = 0; y < 8; ++y) {
 			for (int x = 0; x < 8; ++x) {
-				if (plosca[x][y] == Polje.PRAZNO) {
+				if (plosca[x][y].equals(Polje.PRAZNO)) {
 					Polje[] stolpec = getStolpec(x, y, plosca);
 					Polje[] vrstica = getVrstica(x, y, plosca);
 					Polje[] diagonalaL = getDiagonalaL(x, y, plosca);

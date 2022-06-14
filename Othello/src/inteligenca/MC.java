@@ -56,7 +56,7 @@ public class MC {
 		Poteza kot3 = new Poteza(7, 0);
 		Poteza kot4 = new Poteza(7, 7);
 		for (int i = 0; i < moznePoteze.length; ++i) {
-			if (moznePoteze[i] == kot1 || moznePoteze[i] == kot2 || moznePoteze[i] == kot3 || moznePoteze[i] == kot4 ) return moznePoteze[i];
+			if (moznePoteze[i].equals(kot1) || moznePoteze[i].equals(kot2) || moznePoteze[i].equals(kot3) || moznePoteze[i].equals(kot4) ) return moznePoteze[i];
 		}
 		
 		//drugace pa mc
