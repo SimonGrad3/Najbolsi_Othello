@@ -242,7 +242,7 @@ public class Igra {
 		int d = seznam.length;
 		
 		if (i + 1 < d) {
-			if (seznam[i + 1].toString() == nasprotnik.toString()) {  //Èe je i+1 element ustrezen 
+			if (seznam[i + 1].toString() == nasprotnik.toString()) {  //ce je i+1 element ustrezen 
 				for (int j = i + 1; j < seznam.length; j++) { 
 					if (seznam[j].toString() == nasprotnik.toString()) continue; 
 					else if (seznam[j] == Polje.PRAZNO) return false; 
@@ -355,7 +355,7 @@ public class Igra {
 	
 	public boolean odigraj(Poteza poteza) {
 		
-		if (poteza == null) {
+		if (poteza.equals(poteza)) {
 //			verjetno ni moznih potez zato je igralec ogigral null
 //			zato samo zamenjamo igralca, ker ima mogoce on kaksno mozno potezo
 			naPotezi = naPotezi.nasprotnik();

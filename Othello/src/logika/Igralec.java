@@ -16,8 +16,8 @@ public enum Igralec {
 	public String toString() {
 		if (this == BEL) return "B";
 		else if (this == CRN) return "C";
-		else if (this == null) return "N";
-		else return "N";
+		else
+			return "N";
 	}
 	
 }
